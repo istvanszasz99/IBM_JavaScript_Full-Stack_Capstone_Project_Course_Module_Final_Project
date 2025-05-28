@@ -1,0 +1,35 @@
+name: Client Build
+
+on:
+  push:
+    paths:
+      - 'giftlink-frontend/**'
+  pull_request:
+    paths:
+      - 'giftlink-frontend/**'
+
+jobs:
+  client_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Change to frontend directory and install packages
+        working-directory: giftlink-frontend
+        run: npm install
+
+      - name: Build client
+        working-directory: giftlink-frontend
+        run: npm run build
+
+      - name: Copy build to server
+        run: cp -r giftlink-frontend/build giftlink-backend/
+
+      - name: Print build success message
+        run: echo "Client build completed successfully."
